@@ -1,32 +1,39 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
-# Define the function to be plotted
-
-
-# Define the range of x values
 x = np.linspace(0,150,1000)
+y = np.linspace(0,150,1000)
 
-# Calculate the y values for each x
-y = np.piecewise(x, 
-                 [(x>=0) & (x<40), (x>=40) & (x<=110), (x>110) & (x<=150)], 
-                 [lambda x : 10 ** (-9+4*np.tanh(((x-40)/25)**2)), lambda x : 10 ** (-9), lambda x : 10 ** (-9+4*np.tanh(((x-110)/25)**2))])
+alpha = np.zeros((1000, 1000), dtype='float')
 
-# Set up the plot with a logarithmic y-axis
-fig, ax = plt.subplots()
-ax.set_yscale('log')
+for (x1,i) in enumerate(x):
+    for (y1,j) in enumerate(y):
+        if (i>=0) and (i<=40) and (j>=0) and (j<=40):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-40)/25)**2))) + 10 ** (-9+4*np.tanh((((j-40)/25)**2)))
+        elif (i>=0) and (i<=40) and (j>40) and (j<110):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-40)/25)**2)))
+        elif (i>=0) and (i<=40) and (j>=110) and (j<=150):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-40)/25)**2))) + 10 ** (-9+4*np.tanh((((j-110)/25)**2)))
+        elif (i>40) and (i<110) and (j>=0) and (j<=40):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((j-40)/25)**2)))
+        elif (i>40) and (i<110) and (j>40) and (j<110):
+            alpha[x1][y1] = 10 ** (-9)
+        elif (i>40) and (i<110) and (j>=110) and (j<=150):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((j-110)/25)**2)))
+        elif (i>=110) and (i<=150) and (j>=0) and (j<=40):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-110)/25)**2))) + 10 ** (-9+4*np.tanh((((j-40)/25)**2)))
+        elif (i>=110) and (i<=150) and (j>40) and (j<110):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-110)/25)**2)))
+        elif (i>=110) and (i<=150) and (j>=110) and (j<=150):
+            alpha[x1][y1] = 10 ** (-9+4*np.tanh((((i-110)/25)**2))) + 10 ** (-9+4*np.tanh((((j-110)/25)**2)))
 
-# Plot the function
-ax.plot(x, y)
-
-# Set the limits of the x and y axes
-ax.set_xlim(0,150)
-ax.set_ylim(10**(-9), 10**(-4))
-
-# Label the axes and title the plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_zscale('log')
+X, Y = np.meshgrid(x, y)
+ax.plot_surface(X, Y, alpha, cmap='viridis')
 ax.set_xlabel('x')
 ax.set_ylabel('y')
-ax.set_title('y = 10^tanh(x^2)')
-
-# Show the plot
+ax.set_zlabel('alpha')
 plt.show()

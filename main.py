@@ -7,8 +7,8 @@ x, y, z = np.meshgrid(np.arange(0, f, 1), np.arange(0, f, 1), np.arange(0, f, 1)
 
 a1, a2 = (0.001, 0.001)
 x0, y0, z0 = (0,0,0)
-xl, zl = (7, 7)
-ax1, ax2, ay, az1, az2 = (0.1, 0.0005, 0.00554,0.00034531, 0.001)
+xl, zl = (9,9)
+ax1, ax2, ay, az1, az2 = (0.2, 0.2, 0.001, 0.0001, 0.0001)  # modified values
 
 alpha = np.zeros_like(x, dtype = 'float')
 
